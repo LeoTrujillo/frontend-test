@@ -1,0 +1,11 @@
+.container-items {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+
+  .item {
+    box-shadow: 4px 2px 19px 4px rgba(196, 190, 196, 1);
+    margin: 20px;
+    width: 30%;
+  }
+}

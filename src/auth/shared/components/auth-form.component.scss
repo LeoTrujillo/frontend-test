@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  min-height: 80vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+
+.error {
+  background: tomato;
+  line-height: 2;
+  color: #fff;
+  padding: 0 15px;
+}

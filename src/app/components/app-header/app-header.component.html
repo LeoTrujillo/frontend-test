@@ -1,0 +1,17 @@
+<div class="menu">
+  <span>Frontend Test</span>
+  <div class="menu-items">
+    <a [routerLink]="['/users']">Users</a>
+    <a [routerLink]="['/catalogs']">Catalog</a>
+    <a (click)="handleFlyers()">Flyers</a>
+  </div>
+</div>
+
+
+<div class="popup" *ngIf="isShowed">
+  <div class="popup-alert">
+    <p>
+      No implemented yet
+    </p>
+  </div>
+</div>

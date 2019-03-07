@@ -1,0 +1,22 @@
+<div class="container">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="login(formLogin)" #formLogin="ngForm">
+        <mat-form-field class="full-width">
+          <input matInput name="user" ngModel #user="ngModel" placeholder="User" required>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <input matInput name="password" ngModel #password="ngModel" type="password" placeholder="Password" required>
+        </mat-form-field>
+        <button type="submit" mat-raised-button color="primary">Login</button>
+      </form>
+    </mat-card-content>
+
+    <div class="error" *ngIf="error">
+      El usuario o contraseña son incorrectos
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,48 @@
+.menu {
+  min-height: 50px;
+  background: #3f51b5;
+  color: #fff;
+  font-size: 30px;
+  line-height: 2;
+  padding: 0px 15px;
+  display: flex;
+  justify-content: space-between;
+
+  &-items {
+    font-size: 16px;
+
+    a {
+      line-height: 4;
+      text-decoration: none;
+      color: #fff;
+      margin: 0 20px;
+      transition: 1s all ease;
+      cursor: pointer;
+
+      &:hover {
+        background: #fff;
+        color: #3f51b5;
+      }
+    }
+  }
+}
+
+
+.popup {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  background: rgba(0, 0, 0, .5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+
+  &-alert {
+    background: #fff;
+    border-radius: 5px;
+    text-align: center;
+    width: 50%;
+  }
+}
