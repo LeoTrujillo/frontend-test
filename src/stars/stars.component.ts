@@ -114,6 +114,8 @@ export class StarsComponent implements OnInit {
 
   async handleNext() {
     let param = '';
+    let firstPipe = [];
+    this.dataTable = [];
     this.route.queryParams.subscribe(params => {
       param = params.ordenar;
     })
@@ -123,35 +125,35 @@ export class StarsComponent implements OnInit {
       this.nextPage = data.next || '';
       this.count = this.count + 1
 
-      const pipe1 = data.results.map(item => {
-        new Promise (done => {
-          done(this.getWorld(item.homeworld))
-        }).then(p => {
-          item.homeworld = p
-        })
-        return item
-      })
+      for (let item of data.results) {
+        const planet: any = await this.starService.getWorld(item.homeworld).toPromise()
+        item.homeworld = planet.name;
+        item.mass = item.mass === 'unknown' ? 0 : parseInt(item.mass)
+        item.height = item.height === 'unknown' ? 0 : parseInt(item.height)
+
+        firstPipe = [...firstPipe, item];
+      }
 
       switch(param) {
         case 'peso':
-          this.dataTable = pipe1.sort((a, b) => a.mass - b.mass)
+          this.dataTable = firstPipe.sort((a, b) => a.mass - b.mass)
           break;
         case 'altura':
-          this.dataTable = pipe1.sort((a, b) => a.height - b.height)
+          this.dataTable = firstPipe.sort((a, b) => a.height - b.height)
           break;
         case 'nombre':
-          this.dataTable = pipe1.sort((a, b) => {
+          this.dataTable = firstPipe.sort((a, b) => {
             if (a.name < b.name ) { return -1 }
             if (a.name > b.name ) { return 1 }
             return 0
           })
           break;
         default:
-          this.dataTable = pipe1;
+          this.dataTable = firstPipe;
           break;
       }
 
-      this.dataTable = pipe1;
+      this.dataTable = firstPipe;
     } catch(err) {
       console.error(err)
     }
@@ -159,6 +161,8 @@ export class StarsComponent implements OnInit {
 
   async handlePrev() {
     let param = '';
+    let firstPipe = [];
+    this.dataTable = [];
     this.route.queryParams.subscribe(params => {
       param = params.ordenar;
     })
@@ -169,90 +173,76 @@ export class StarsComponent implements OnInit {
       this.nextPage = data.next || '';
       this.count = this.count > 1 ? this.count - 1 : this.count;
 
-      const pipe1 = data.results.map(item => {
-        new Promise (done => {
-          done(this.getWorld(item.homeworld))
-        }).then(p => {
-          item.homeworld = p
-        })
-        return item
-      })
+      for (let item of data.results) {
+        const planet: any = await this.starService.getWorld(item.homeworld).toPromise()
+        item.homeworld = planet.name;
+        item.mass = item.mass === 'unknown' ? 0 : parseInt(item.mass)
+        item.height = item.height === 'unknown' ? 0 : parseInt(item.height)
+
+        firstPipe = [...firstPipe, item];
+      }
 
       switch(param) {
         case 'peso':
-          this.dataTable = pipe1.sort((a, b) => a.mass - b.mass)
+          this.dataTable = firstPipe.sort((a, b) => a.mass - b.mass)
           break;
         case 'altura':
-          this.dataTable = pipe1.sort((a, b) => a.height - b.height)
+          this.dataTable = firstPipe.sort((a, b) => a.height - b.height)
           break;
         case 'nombre':
-          this.dataTable = pipe1.sort((a, b) => {
+          this.dataTable = firstPipe.sort((a, b) => {
             if (a.name < b.name ) { return -1 }
             if (a.name > b.name ) { return 1 }
             return 0
           })
           break;
         default:
-          this.dataTable = pipe1;
+          this.dataTable = firstPipe;
           break;
       }
 
-      this.dataTable = pipe1;
+      this.dataTable = firstPipe;
     } catch(err) {
       console.error(err)
     }
   }
 
   async getPeople() {
+    let firstPipe = []
     try {
       const data: any = await this.starService.getParam().toPromise();
 
-      const pipe1 = data.results.map(item => {
-        new Promise (done => {
-          done(this.getWorld(item.homeworld))
-        }).then(p => {
-          item.homeworld = p
-        })
-        return item
-      })
+      for (let item of data.results) {
+        const planet: any = await this.starService.getWorld(item.homeworld).toPromise()
+        item.homeworld = planet.name;
+        item.mass = item.mass === 'unknown' ? 0 : parseInt(item.mass)
+        item.height = item.height === 'unknown' ? 0 : parseInt(item.height)
 
-      let arr = [...pipe1];
-      let page = data.next;
-      for (let i = 0; i < 4; i++) {
-        const d: any = await this.starService.next(page).toPromise()
-        page = d.next;
-
-        const p1 = d.results.map(item => {
-          new Promise (done => {
-            done(this.getWorld(item.homeworld))
-          }).then(p => {
-            item.homeworld = p
-          })
-          return item
-        })
-
-        arr = [...p1, ...arr]
+        firstPipe = [...firstPipe, item];
       }
 
-      this.dataTable = arr;
-      this.nextPage = page;
+      this.dataTable = firstPipe;
+      this.nextPage = data.next;
+
     } catch (err) {
       console.error(err)
     }
   }
 
   async getData(name) {
+    let firstPipe = []
     try {
       const data: any = await this.starService.getPeople(name).toPromise();
-      const pipe1 = data.results.map(item => {
-        new Promise (done => {
-          done(this.getWorld(item.homeworld))
-        }).then(p => {
-          item.homeworld = p
-        })
-        return item
-      })
-      this.person = pipe1[0]
+      for (let item of data.results) {
+        const planet: any = await this.starService.getWorld(item.homeworld).toPromise()
+        item.homeworld = planet.name;
+        item.mass = item.mass === 'unknown' ? 0 : parseInt(item.mass)
+        item.height = item.height === 'unknown' ? 0 : parseInt(item.height)
+
+        firstPipe = [...firstPipe, item];
+      }
+
+      this.person = firstPipe[0]
 
     } catch (err) {
       console.error('ERR', err);
@@ -260,44 +250,41 @@ export class StarsComponent implements OnInit {
   }
 
   async getByParam(name) {
+    let firstPipe = [];
     try {
       const data: any = await this.starService.getParam().toPromise();
-      const arr = data.results.map(item => {
-        new Promise (done => {
-          done(this.getWorld(item.homeworld))
-        }).then(p => {
-          item.homeworld = p
-        })
-        return item
-      });
+      for (let item of data.results) {
+        const planet: any = await this.starService.getWorld(item.homeworld).toPromise()
+        item.homeworld = planet.name;
+        item.mass = item.mass === 'unknown' ? 0 : parseInt(item.mass)
+        item.height = item.height === 'unknown' ? 0 : parseInt(item.height)
+
+        firstPipe = [...firstPipe, item];
+      }
+
       this.nextPage = data.next || '',
       this.prevPage = data.previous || ''
       switch(name) {
         case 'peso':
-          this.dataTable = arr.sort((a, b) => a.mass - b.mass)
+          this.dataTable = firstPipe.sort((a, b) => a.mass - b.mass)
           break;
         case 'altura':
-          this.dataTable = arr.sort((a, b) => a.height - b.height)
+          this.dataTable = firstPipe.sort((a, b) => a.height - b.height)
           break;
         case 'nombre':
-          this.dataTable = arr.sort((a, b) => {
+          this.dataTable = firstPipe.sort((a, b) => {
             if (a.name < b.name ) { return -1 }
             if (a.name > b.name ) { return 1 }
             return 0
           })
           break;
         default:
-          this.dataTable = arr;
+          this.dataTable = firstPipe;
           break;
       }
     } catch(err) {
       console.error(err)
     }
-  }
-
-  async getWorld(uri) {
-    const res: any = await this.starService.getWorld(uri).toPromise();
-    return res.name || 'No planet';
   }
 }
 

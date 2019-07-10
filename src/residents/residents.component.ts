@@ -54,22 +54,24 @@ export class ResidentsComponent implements OnInit {
   }
 
   async handleNext() {
+    let firstPipe = [];
+    this.dataTable = [];
     try {
       const data: any = await this.starService.next(this.nextPage).toPromise();
       this.prevPage = data.previous || '';
       this.nextPage = data.next || '';
       this.count = this.count + 1
 
-      const pipe1 = data.results.map(item => {
-        new Promise (done => {
-          done(this.getWorld(item.homeworld))
-        }).then(p => {
-          item.homeworld = p
-        })
-        return item
-      })
+      for (let item of data.results) {
+        const planet: any = await this.starService.getWorld(item.homeworld).toPromise()
+        item.homeworld = planet.name;
+        item.mass = item.mass === 'unknown' ? 0 : parseInt(item.mass)
+        item.height = item.height === 'unknown' ? 0 : parseInt(item.height)
 
-      const pipe2 = pipe1.sort((a, b) => {
+        firstPipe = [...firstPipe, item];
+      }
+
+      const pipe2 = firstPipe.sort((a, b) => {
         if (a.homeworld < b.homeworld ) { return -1 }
         if (a.homeworld > b.homeworld ) { return 1 }
         return 0
@@ -82,22 +84,24 @@ export class ResidentsComponent implements OnInit {
   }
 
   async handlePrev() {
+    let firstPipe = [];
+    this.dataTable = [];
     try {
       const data: any = await this.starService.next(this.prevPage).toPromise();
       this.prevPage = data.previous || '';
       this.nextPage = data.next || '';
       this.count = this.count - 1;
 
-      const pipe1 = data.results.map(item => {
-        new Promise (done => {
-          done(this.getWorld(item.homeworld))
-        }).then(p => {
-          item.homeworld = p
-        })
-        return item
-      })
+      for (let item of data.results) {
+        const planet: any = await this.starService.getWorld(item.homeworld).toPromise()
+        item.homeworld = planet.name;
+        item.mass = item.mass === 'unknown' ? 0 : parseInt(item.mass)
+        item.height = item.height === 'unknown' ? 0 : parseInt(item.height)
 
-      const pipe2 = pipe1.sort((a, b) => {
+        firstPipe = [...firstPipe, item];
+      }
+
+      const pipe2 = firstPipe.sort((a, b) => {
         if (a.homeworld < b.homeworld ) { return -1 }
         if (a.homeworld > b.homeworld ) { return 1 }
         return 0
@@ -110,20 +114,21 @@ export class ResidentsComponent implements OnInit {
   }
 
   async getByResident() {
+    let firstPipe = [];
     try {
       const data: any = await this.starService.getResident().toPromise();
       this.nextPage = data.next || '';
 
-      const pipe1 = data.results.map(item => {
-        new Promise (done => {
-          done(this.getWorld(item.homeworld))
-        }).then(p => {
-          item.homeworld = p
-        })
-        return item
-      })
+      for (let item of data.results) {
+        const planet: any = await this.starService.getWorld(item.homeworld).toPromise()
+        item.homeworld = planet.name;
+        item.mass = item.mass === 'unknown' ? 0 : parseInt(item.mass)
+        item.height = item.height === 'unknown' ? 0 : parseInt(item.height)
 
-      const pipe2 = pipe1.sort((a, b) => {
+        firstPipe = [...firstPipe, item];
+      }
+
+      const pipe2 = firstPipe.sort((a, b) => {
         if (a.homeworld < b.homeworld ) { return -1 }
         if (a.homeworld > b.homeworld ) { return 1 }
         return 0
@@ -134,11 +139,6 @@ export class ResidentsComponent implements OnInit {
     } catch(err) {
       console.error(err)
     }
-  }
-
-  async getWorld(uri) {
-    const res: any = await this.starService.getWorld(uri).toPromise();
-    return res.name || 'No planet';
   }
 }
 
