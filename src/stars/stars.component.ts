@@ -22,7 +22,7 @@ import { StarService } from './services/stars.service';
         <input type="submit" style="line-height: 2em; background:teal ; color: #fff" value="Buscar">
       </form>
 
-      <div *ngIf="dataTable.length === 0" class="loading">
+      <div *ngIf="dataTable.length === 0 && person === null" class="loading">
         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
       </div>
 
@@ -113,6 +113,10 @@ export class StarsComponent implements OnInit {
   }
 
   async handleNext() {
+    let param = '';
+    this.route.queryParams.subscribe(params => {
+      param = params.ordenar;
+    })
     try {
       const data: any = await this.starService.next(this.nextPage).toPromise();
       this.prevPage = data.previous || '';
@@ -128,6 +132,25 @@ export class StarsComponent implements OnInit {
         return item
       })
 
+      switch(param) {
+        case 'peso':
+          this.dataTable = pipe1.sort((a, b) => a.mass - b.mass)
+          break;
+        case 'altura':
+          this.dataTable = pipe1.sort((a, b) => a.height - b.height)
+          break;
+        case 'nombre':
+          this.dataTable = pipe1.sort((a, b) => {
+            if (a.name < b.name ) { return -1 }
+            if (a.name > b.name ) { return 1 }
+            return 0
+          })
+          break;
+        default:
+          this.dataTable = pipe1;
+          break;
+      }
+
       this.dataTable = pipe1;
     } catch(err) {
       console.error(err)
@@ -135,6 +158,11 @@ export class StarsComponent implements OnInit {
   }
 
   async handlePrev() {
+    let param = '';
+    this.route.queryParams.subscribe(params => {
+      param = params.ordenar;
+    })
+
     try {
       const data: any = await this.starService.next(this.prevPage).toPromise();
       this.prevPage = data.previous || '';
@@ -149,6 +177,25 @@ export class StarsComponent implements OnInit {
         })
         return item
       })
+
+      switch(param) {
+        case 'peso':
+          this.dataTable = pipe1.sort((a, b) => a.mass - b.mass)
+          break;
+        case 'altura':
+          this.dataTable = pipe1.sort((a, b) => a.height - b.height)
+          break;
+        case 'nombre':
+          this.dataTable = pipe1.sort((a, b) => {
+            if (a.name < b.name ) { return -1 }
+            if (a.name > b.name ) { return 1 }
+            return 0
+          })
+          break;
+        default:
+          this.dataTable = pipe1;
+          break;
+      }
 
       this.dataTable = pipe1;
     } catch(err) {
@@ -197,7 +244,16 @@ export class StarsComponent implements OnInit {
   async getData(name) {
     try {
       const data: any = await this.starService.getPeople(name).toPromise();
-      this.person = data.results[0]
+      const pipe1 = data.results.map(item => {
+        new Promise (done => {
+          done(this.getWorld(item.homeworld))
+        }).then(p => {
+          item.homeworld = p
+        })
+        return item
+      })
+      this.person = pipe1[0]
+
     } catch (err) {
       console.error('ERR', err);
     }
