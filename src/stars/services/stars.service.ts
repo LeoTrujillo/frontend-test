@@ -12,7 +12,7 @@ export class StarService {
     return this.http.get(`${URL}people/?search=${person}`)
   }
 
-  getParam(param) {
+  getParam() {
     return this.http.get(`${URL}people/`)
   }
 
@@ -20,14 +20,16 @@ export class StarService {
     return this.http.get(`${URL}people/`)
   }
 
-  async getWorld(url) {
-    try {
-      const response: any = this.http.get(url)
-      console.log('response', response.name)
-      return response.name;
-    } catch(err) {
-      console.error(err)
-    }
+  next(uri) {
+    return this.http.get(uri)
+  }
+
+  prev(uri) {
+    return this.http.get(uri)
+  }
+
+  getWorld(url) {
+    return this.http.get(url)
   }
 
 }

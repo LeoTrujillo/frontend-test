@@ -9,7 +9,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 //components
 import { AppHeaderComponent } from './components/app-header/app-header.component';
-import { StarsComponent } from '../stars/stars.component';
+import { StarsComponent } from '../stars/stars.component'
+import { ResidentsComponent } from '../residents/residents.component'
 
 // feature modules
 import { AuthModule } from './../auth/auth.module';
@@ -21,8 +22,9 @@ import { StarService } from '../stars/services/stars.service';
 import { MatDialogModule } from '@angular/material';
 
 export const ROUTES: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'stars' },
-  { path: 'stars', component: StarsComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'personajes' },
+  { path: 'personajes', component: StarsComponent },
+  { path: 'residentes', component: ResidentsComponent }
 ];
 
 @NgModule({
@@ -30,6 +32,7 @@ export const ROUTES: Routes = [
     AppComponent,
     AppHeaderComponent,
     StarsComponent,
+    ResidentsComponent,
   ],
   imports: [
     BrowserModule,

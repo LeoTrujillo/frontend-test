@@ -12,12 +12,4 @@ export class AppHeaderComponent {
 
   constructor(private router: Router) { }
 
-  handleFlyers() {
-    console.log('handle flyers');
-    this.isShowed = true;
-    setTimeout(() => {
-      sessionStorage.clear();
-      this.router.navigate(['/auth']);
-    }, 2000);
-  }
 }
